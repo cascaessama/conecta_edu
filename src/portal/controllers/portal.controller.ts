@@ -11,6 +11,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { PortalService } from '../services/portal.service';
+import { IPosts } from '../schemas/models/posts.interface';
 import { z } from 'zod';
 import { ZodValidationPipe } from 'src/shared/pipe/zod-validation.pipe';
 // import { LoggingInterceptor } from 'src/shared/interceptors/logging.interceptor';
@@ -22,17 +23,7 @@ const createPostsSchema = z.object({
   dataCriacao: z.coerce.date(),
   autor: z.string(),
 });
-
-const updatePostsSchema = z.object({
-  titulo: z.string().optional(),
-  conteudo: z.string().optional(),
-  dataCriacao: z.coerce.date().optional(),
-  autor: z.string().optional(),
-});
-
 type CreatedPosts = z.infer<typeof createPostsSchema>;
-type UpdatedPosts = z.infer<typeof updatePostsSchema>;
-
 
 // @ApiTags('stock')
 // @UseInterceptors(LoggingInterceptor)
@@ -63,7 +54,7 @@ export class PortalController {
   @Put(':id')
   async updatePosts(
     @Param('id') id: string,
-    @Body(new ZodValidationPipe(updatePostsSchema)) { titulo, conteudo, dataCriacao, autor }: UpdatedPosts,
+    @Body() posts: IPosts,
   ) {
     return this.portalService.updatePosts(id, posts);
   }
