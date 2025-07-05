@@ -15,7 +15,7 @@ export class Posts implements IPosts {
     @Prop()
     dataCriacao: Date;
     @Prop()
-    autorId: string;
+    autor: string;
 }
 
 export const PostsSchema = SchemaFactory.createForClass(Posts);

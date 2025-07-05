@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PostsRepository } from './repositories/posts.repository';
+import { PostsMongooseRepository } from './repositories/mongoose/posts.mongoose.repository';
+import { PortalService } from './services/portal.service';
+import { PortalController } from './controllers/portal.controller';
 import { Posts, PostsSchema } from './schemas/posts.schema';
 
 @Module({
@@ -11,6 +15,13 @@ import { Posts, PostsSchema } from './schemas/posts.schema';
             },
         ]),
     ],
+  providers: [
+    {
+      provide: PostsRepository,
+      useClass: PostsMongooseRepository,
+    },
+    PortalService,
+  ],
+  controllers: [PortalController],
 })
-
 export class PortalModule {}

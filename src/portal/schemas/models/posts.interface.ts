@@ -3,5 +3,5 @@ export interface IPosts {
    titulo: string;
    conteudo: string;
    dataCriacao: Date;
-   autorId: string;
+   autor: string;
 }
