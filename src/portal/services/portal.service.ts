@@ -12,7 +12,7 @@ export class PortalService {
 
   async getPosts(id: string) {
     const posts = await this.postsRepository.getPosts(id);
-    if (!posts) throw new NotFoundException('Post not found');
+    if (!posts) throw new NotFoundException('Post não encontrado na base de dados');
     return posts;
   }
 
