@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -37,6 +38,12 @@ export class PortalController {
     @Query('page') page: number,
   ) {
     return this.portalService.getAllPosts(limit, page);
+  }
+
+  @Get('search')
+  async searchPosts(@Query('query') query: string) {
+    if (!query) throw new BadRequestException('Query param is required');
+    return this.portalService.searchPosts(query);
   }
 
   @Get(':id')

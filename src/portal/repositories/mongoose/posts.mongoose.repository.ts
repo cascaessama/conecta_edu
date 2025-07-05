@@ -17,8 +17,17 @@ export class PostsMongooseRepository implements PostsRepository {
     return this.postsModel.find().skip(offset).limit(limit).exec();
   }
 
-  getPosts(postsId: string): Promise<IPosts | null> {
-    return this.postsModel.findById(postsId).exec();
+  getPosts(id: string): Promise<IPosts | null> {
+    return this.postsModel.findById(id).exec();
+  }
+
+  async searchPosts(query: string): Promise<IPosts[]> {
+    return this.postsModel.find({
+      $or: [
+        { titulo: { $regex: query, $options: 'i' } },
+        { conteudo: { $regex: query, $options: 'i' } }
+      ]
+    }).exec();
   }
 
   async createPosts(posts: IPosts): Promise<void> {

@@ -16,6 +16,10 @@ export class PortalService {
     return posts;
   }
 
+  async searchPosts(query: string) {
+    return this.postsRepository.searchPosts(query);
+  }
+  
   async createPosts(posts: IPosts) {
     return this.postsRepository.createPosts(posts);
   }
