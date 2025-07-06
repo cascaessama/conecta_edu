@@ -8,11 +8,11 @@ RUN npm install
 
 COPY . .
 
-ARG MONGO_URI
+ARG MONGO_URL
 
-ENV MONGO_URI=$MONGO_URI
+ENV MONGO_URL=$MONGO_URL
 
-RUN echo "MONGO_URI=${MONGO_URI}" > .env
+RUN echo "MONGO_URL=${MONGO_URL}" > .env
 
 RUN npm install -g pnpm
 
