@@ -20,6 +20,6 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t $DOCKER_USERNAME/conectaedu:lastest --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} .
-          docker push $DOCKER_USERNAME/conectaedu:lastest
+          docker build -t $DOCKER_USERNAME/conectaedu:latest --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} .
+          docker push $DOCKER_USERNAME/conectaedu:latest
  
