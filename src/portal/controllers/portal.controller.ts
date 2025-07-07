@@ -14,7 +14,7 @@ import {
 import { PortalService } from '../services/portal.service';
 import { IPosts } from '../schemas/models/posts.interface';
 import { z } from 'zod';
-import { ZodValidationPipe } from 'src/shared/pipe/zod-validation.pipe';
+import { ZodValidationPipe } from '../../shared/pipe/zod-validation.pipe';
 // import { LoggingInterceptor } from 'src/shared/interceptors/logging.interceptor';
 // import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 

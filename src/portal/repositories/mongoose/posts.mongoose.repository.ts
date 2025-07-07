@@ -1,7 +1,7 @@
 import { IPosts} from 'src/portal/schemas/models/posts.interface';
 import { PostsRepository } from '../posts.repository';
 import { InjectModel } from '@nestjs/mongoose';
-import { Posts } from 'src/portal/schemas/posts.schema';
+import { Posts } from '../../schemas/posts.schema';
 import { Model } from 'mongoose';
 
 export class PostsMongooseRepository implements PostsRepository {
