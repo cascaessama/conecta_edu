@@ -35,32 +35,32 @@ describe('PostsMongooseRepository', () => {
     repository = module.get<PostsMongooseRepository>(PostsMongooseRepository);
   });
 
-  it('should get all posts', async () => {
+  it('deve retornar todos os posts', async () => {
     modelMock.exec.mockResolvedValue(['post1']);
     expect(await repository.getAllPosts(10, 1)).toEqual(['post1']);
   });
 
-  it('should get a post by id', async () => {
+  it('deve retornar um post pelo id', async () => {
     modelMock.exec.mockResolvedValue({ id: '1' });
     expect(await repository.getPosts('1')).toEqual({ id: '1' });
   });
 
-  it('should search posts', async () => {
+  it('deve buscar posts', async () => {
     modelMock.exec.mockResolvedValue(['post1']);
     expect(await repository.searchPosts('query')).toEqual(['post1']);
   });
 
-  it('should create a post', async () => {
+  it('deve criar um post', async () => {
     await expect(repository.createPosts({} as any)).resolves.toBeUndefined();
     expect(saveMock).toHaveBeenCalled();
   });
 
-  it('should update a post', async () => {
+  it('deve atualizar um post', async () => {
     modelMock.exec.mockResolvedValue(undefined);
     await expect(repository.updatePosts('1', {} as any)).resolves.toBeUndefined();
   });
 
-  it('should delete a post', async () => {
+  it('deve deletar um post', async () => {
     modelMock.exec.mockResolvedValue(undefined);
     await expect(repository.deletePosts('1')).resolves.toBeUndefined();
   });

@@ -8,15 +8,13 @@ import {
   Post,
   Put,
   Query,
-  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { PortalService } from '../services/portal.service';
 import { IPosts } from '../schemas/models/posts.interface';
 import { z } from 'zod';
 import { ZodValidationPipe } from '../../shared/pipe/zod-validation.pipe';
-// import { LoggingInterceptor } from 'src/shared/interceptors/logging.interceptor';
-// import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 const createPostsSchema = z.object({
   titulo: z.string(),
@@ -26,8 +24,7 @@ const createPostsSchema = z.object({
 });
 type CreatedPosts = z.infer<typeof createPostsSchema>;
 
-// @ApiTags('stock')
-// @UseInterceptors(LoggingInterceptor)
+ApiTags('portal')
 @Controller('portal')
 export class PortalController {
   constructor(private readonly portalService: PortalService) {}
@@ -51,7 +48,7 @@ export class PortalController {
     return this.portalService.getPosts(id);
   }
 
-//   @ApiBearerAuth()
+  @ApiBearerAuth()
   @UsePipes(new ZodValidationPipe(createPostsSchema))
   @Post()
   async createPosts(@Body() { titulo, conteudo, dataCriacao, autor }: CreatedPosts) {
