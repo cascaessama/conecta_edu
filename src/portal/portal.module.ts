@@ -5,6 +5,7 @@ import { PostsMongooseRepository } from './repositories/mongoose/posts.mongoose.
 import { PortalService } from './services/portal.service';
 import { PortalController } from './controllers/portal.controller';
 import { Posts, PostsSchema } from './schemas/posts.schema';
+import { PrometheusService } from 'src/shared/services/prometheus.service';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { Posts, PostsSchema } from './schemas/posts.schema';
       useClass: PostsMongooseRepository,
     },
     PortalService,
+    PrometheusService
   ],
   controllers: [PortalController],
 })

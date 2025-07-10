@@ -8,13 +8,17 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { PortalService } from '../services/portal.service';
 import { IPosts } from '../schemas/models/posts.interface';
 import { z } from 'zod';
 import { ZodValidationPipe } from '../../shared/pipe/zod-validation.pipe';
+import { LoggingInterceptor } from '../../shared/interceptors/logging.interceptor';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 
 const createPostsSchema = z.object({
   titulo: z.string(),
@@ -25,22 +29,32 @@ const createPostsSchema = z.object({
 type CreatedPosts = z.infer<typeof createPostsSchema>;
 
 ApiTags('portal')
+@UseInterceptors(LoggingInterceptor)
 @Controller('portal')
 export class PortalController {
   constructor(private readonly portalService: PortalService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   async getAllPosts(
     @Query('limit') limit: number,
     @Query('page') page: number,
   ) {
-    return this.portalService.getAllPosts(limit, page);
+    const posts = await this.portalService.getAllPosts(limit, page);
+    if (!posts || posts.length === 0) {
+      return { message: 'Não há post cadastrados na base de dados' };
+    }
+    return posts;
   }
 
   @Get('search')
   async searchPosts(@Query('query') query: string) {
     if (!query) throw new BadRequestException('Query param is required');
-    return this.portalService.searchPosts(query);
+    const result = await this.portalService.searchPosts(query);
+    if (!result || result.length === 0) {
+      return { message: `Busca nos campos 'Título' e 'Conteúdo' não encontrou resultados com a palavra <${query}>` };
+    }
+    return result;
   }
 
   @Get(':id')
@@ -52,7 +66,8 @@ export class PortalController {
   @UsePipes(new ZodValidationPipe(createPostsSchema))
   @Post()
   async createPosts(@Body() { titulo, conteudo, dataCriacao, autor }: CreatedPosts) {
-    return this.portalService.createPosts({ titulo, conteudo, dataCriacao, autor });
+    await this.portalService.createPosts({ titulo, conteudo, dataCriacao, autor });
+    return { message: 'Post criado com sucesso!' };
   }
 
   @Put(':id')
@@ -60,11 +75,14 @@ export class PortalController {
     @Param('id') id: string,
     @Body() posts: IPosts,
   ) {
-    return this.portalService.updatePosts(id, posts);
+    await this.portalService.updatePosts(id, posts);
+    return { message: 'Post atualizado com sucesso!' };
   }
 
   @Delete(':id')
-  async deletePosts(@Param('id') id: string) {
-    return this.portalService.deletePosts(id);
-  }
+    async deletePosts(@Param('id') id: string) {
+      await this.portalService.deletePosts(id);
+      return { message: 'Post excluído com sucesso!' };
+    } 
+
 }
