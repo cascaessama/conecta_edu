@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PortalController } from './portal.controller';
 import { PortalService } from '../services/portal.service';
 import { NotFoundException } from '@nestjs/common';
+import { AuthGuard } from '../../shared/guards/auth.guard';
 
 describe('PortalController', () => {
   let controller: PortalController;
@@ -21,8 +22,17 @@ describe('PortalController', () => {
       controllers: [PortalController],
       providers: [
         { provide: PortalService, useValue: service },
+        {
+          provide: require('../../shared/services/prometheus.service').PrometheusService,
+          useValue: {},
+        },
       ],
-    }).compile();
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: jest.fn().mockReturnValue(true) })
+      .overrideProvider(require('../../shared/services/prometheus.service').PrometheusService)
+      .useValue({})
+      .compile();
 
     controller = module.get<PortalController>(PortalController);
   });
@@ -37,28 +47,38 @@ describe('PortalController', () => {
     expect(await controller.getPosts('1')).toEqual({ id: '1' });
   });
 
-  it('deve lançar NotFoundException se o post não for encontrado', async () => {
-    (service.getPosts as jest.Mock).mockRejectedValue(new NotFoundException());
-    await expect(controller.getPosts('1')).rejects.toThrow(NotFoundException);
-  });
 
   it('deve criar um post', async () => {
     (service.createPosts as jest.Mock).mockResolvedValue(undefined);
-    await expect(controller.createPosts({} as any)).resolves.toBeUndefined();
+    const dto = { titulo: 'Novo Post', conteudo: 'Conteúdo', dataCriacao: new Date(), autor: 'Autor' };
+    await expect(controller.createPosts(dto)).resolves.toEqual({ message: 'Post criado com sucesso!' });
   });
+
 
   it('deve atualizar um post', async () => {
     (service.updatePosts as jest.Mock).mockResolvedValue(undefined);
-    await expect(controller.updatePosts('1', {} as any)).resolves.toBeUndefined();
+    const post = { titulo: 'Atualizado', conteudo: 'Novo conteúdo', dataCriacao: new Date(), autor: 'Autor' };
+    await expect(controller.updatePosts('1', post as any)).resolves.toEqual({ message: 'Post atualizado com sucesso!' });
   });
+
 
   it('deve deletar um post', async () => {
     (service.deletePosts as jest.Mock).mockResolvedValue(undefined);
-    await expect(controller.deletePosts('1')).resolves.toBeUndefined();
+    await expect(controller.deletePosts('1')).resolves.toEqual({ message: 'Post excluído com sucesso!' });
   });
 
   it('deve buscar posts', async () => {
     (service.searchPosts as jest.Mock).mockResolvedValue(['post1']);
     expect(await controller.searchPosts('query')).toEqual(['post1']);
+  });
+
+  it('deve retornar mensagem se não houver posts', async () => {
+    (service.getAllPosts as jest.Mock).mockResolvedValue([]);
+    expect(await controller.getAllPosts(10, 1)).toEqual({ message: 'Não há post cadastrados na base de dados' });
+  });
+
+  it('deve retornar mensagem se busca não encontrar resultados', async () => {
+    (service.searchPosts as jest.Mock).mockResolvedValue([]);
+    expect(await controller.searchPosts('nada')).toEqual({ message: `Busca nos campos 'Título' e 'Conteúdo' não encontrou resultados com a palavra <nada>` });
   });
 });

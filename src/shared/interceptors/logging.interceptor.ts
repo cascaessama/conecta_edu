@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
-import { PrometheusService } from 'src/shared/services/prometheus.service';
+import { PrometheusService } from '../services/prometheus.service';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {

@@ -18,7 +18,7 @@ import { z } from 'zod';
 import { ZodValidationPipe } from '../../shared/pipe/zod-validation.pipe';
 import { LoggingInterceptor } from '../../shared/interceptors/logging.interceptor';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/shared/guards/auth.guard';
+import { AuthGuard } from '../../shared/guards/auth.guard';
 
 const createPostsSchema = z.object({
   titulo: z.string(),
