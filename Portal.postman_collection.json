@@ -1,0 +1,232 @@
+{
+	"info": {
+		"_postman_id": "c1e608c3-0fe3-4f42-9805-0c0f26603cb9",
+		"name": "Portal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13658818"
+	},
+	"item": [
+		{
+			"name": "getAllPosts",
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "secret",
+							"value": "fiap25",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "payload",
+							"value": "{}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/portal",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"portal"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPosts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/portal/686f0a62a3ba83d53f8ffbf7",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"portal",
+						"686f0a62a3ba83d53f8ffbf7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "searchPosts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/portal/search?query=batata",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"portal",
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "batata"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createPosts",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"titulo\": \"Post 3\",\n    \"conteudo\": \"Conteúdo post\",\n    \"dataCriacao\": \"2025-07-06T19:16:00.000Z\",\n    \"autor\": \"João da Silva\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/portal",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"portal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updatePosts",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"titulo\": \"Título atualizado\",\n    \"conteudo\": \"Conteúdo atualizado do post.\",\n    \"dataCriacao\": \"2025-07-06T19:17:00.000Z\",\n    \"autor\": \"Novo Autor\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/portal/686af5dbe19021b9b4b06607",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"portal",
+						"686af5dbe19021b9b4b06607"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deletePosts",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"titulo\": \"Título atualizado\",\n    \"conteudo\": \"Conteúdo atualizado do post.\",\n    \"dataCriacao\": \"2025-07-04T12:00:00.000Z\",\n    \"autor\": \"Novo Autor\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/portal/686f1cca4ca4606a115ee37a",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"portal",
+						"686f1cca4ca4606a115ee37a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Metrics",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"titulo\": \"Meu quinto post\",\n    \"conteudo\": \"Conteúdo do post quatro.\",\n    \"dataCriacao\": \"2025-07-06T19:16:00.000Z\",\n    \"autor\": \"João da Silva\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/metrics",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"metrics"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost:3000",
+			"value": "localhost:3000",
+			"type": "default"
+		}
+	]
+}
