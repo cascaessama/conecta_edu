@@ -77,17 +77,29 @@
 		},
 		{
 			"name": "getPosts",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{url}}/portal/686f0a62a3ba83d53f8ffbf7",
+					"raw": "{{url}}/portal/686f1441f340842dce08b80c",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"portal",
-						"686f0a62a3ba83d53f8ffbf7"
+						"686f1441f340842dce08b80c"
 					]
 				}
 			},
@@ -99,7 +111,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/portal/search?query=batata",
+					"raw": "{{url}}/portal/search?query=Post10",
 					"host": [
 						"{{url}}"
 					],
@@ -110,7 +122,7 @@
 					"query": [
 						{
 							"key": "query",
-							"value": "batata"
+							"value": "Post10"
 						}
 					]
 				}
@@ -124,7 +136,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"titulo\": \"Post 3\",\n    \"conteudo\": \"Conteúdo post\",\n    \"dataCriacao\": \"2025-07-06T19:16:00.000Z\",\n    \"autor\": \"João da Silva\"\n}",
+					"raw": "{\n    \"titulo\": \"Post10\",\n    \"conteudo\": \"Conteúdo post\",\n    \"dataCriacao\": \"2025-07-18T19:21:00.000Z\",\n    \"autor\": \"João da Silva\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -150,7 +162,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"titulo\": \"Título atualizado\",\n    \"conteudo\": \"Conteúdo atualizado do post.\",\n    \"dataCriacao\": \"2025-07-06T19:17:00.000Z\",\n    \"autor\": \"Novo Autor\"\n}",
+					"raw": "{\n    \"titulo\": \"Post10 update\",\n    \"conteudo\": \"Conteúdo atualizado do post.\",\n    \"dataCriacao\": \"2025-07-18T21:30:00.000Z\",\n    \"autor\": \"Novo Autor\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -158,13 +170,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/portal/686af5dbe19021b9b4b06607",
+					"raw": "{{url}}/portal/687c356bb2e2d7b0f4008b4a",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"portal",
-						"686af5dbe19021b9b4b06607"
+						"687c356bb2e2d7b0f4008b4a"
 					]
 				}
 			},
@@ -185,13 +197,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/portal/686f1cca4ca4606a115ee37a",
+					"raw": "{{url}}/portal/6879a2e3e584bdbfe4c48764",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"portal",
-						"686f1cca4ca4606a115ee37a"
+						"6879a2e3e584bdbfe4c48764"
 					]
 				}
 			},
