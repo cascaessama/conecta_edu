@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { AuthModule } from './portal/modules/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '10m' },
     }),
+    AuthModule, // Adicionando o AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

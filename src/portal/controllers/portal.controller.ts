@@ -19,6 +19,7 @@ import { ZodValidationPipe } from '../../shared/pipe/zod-validation.pipe';
 import { LoggingInterceptor } from '../../shared/interceptors/logging.interceptor';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../../shared/guards/auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 const createPostsSchema = z.object({
   titulo: z.string(),
@@ -34,7 +35,6 @@ ApiTags('portal')
 export class PortalController {
   constructor(private readonly portalService: PortalService) {}
 
-  @UseGuards(AuthGuard)
   @Get()
   async getAllPosts(
     @Query('limit') limit: number,
@@ -63,6 +63,7 @@ export class PortalController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @UsePipes(new ZodValidationPipe(createPostsSchema))
   @Post()
   async createPosts(@Body() { titulo, conteudo, dataCriacao, autor }: CreatedPosts) {
@@ -70,6 +71,7 @@ export class PortalController {
     return { message: 'Post criado com sucesso!' };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async updatePosts(
     @Param('id') id: string,
@@ -79,6 +81,7 @@ export class PortalController {
     return { message: 'Post atualizado com sucesso!' };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
     async deletePosts(@Param('id') id: string) {
       await this.portalService.deletePosts(id);
