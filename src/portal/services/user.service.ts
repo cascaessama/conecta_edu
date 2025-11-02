@@ -7,6 +7,7 @@ import { UserRepository } from '../repositories/user.repository';
 import * as bcrypt from 'bcrypt';
 import { UserType } from '../schemas/models/user-type.enum';
 import { User } from '../schemas/user.schema';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -48,5 +49,52 @@ export class UserService {
 
   async getAllUsers(limit: number, page: number): Promise<User[]> {
     return this.userRepository.findAllPaginated(limit, page);
+  }
+
+  async searchUsers(query: string): Promise<User[]> {
+    return this.userRepository.searchUsers(query);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    return this.userRepository.deleteUser(id);
+  }
+
+  async updateUser(id: string, dto: UpdateUserDto): Promise<void> {
+    if (!dto || Object.keys(dto).length === 0) {
+      throw new BadRequestException('Nenhum dado para atualizar');
+    }
+
+    const update: Partial<User> = {};
+
+    if (typeof dto.username !== 'undefined') {
+      update.username = dto.username;
+    }
+
+    if (typeof dto.userType !== 'undefined') {
+      update.userType = dto.userType as UserType;
+    }
+
+    if (typeof dto.password !== 'undefined') {
+      update.password = await bcrypt.hash(dto.password, 10);
+    }
+
+    try {
+      await this.userRepository.updateUser(id, update);
+    } catch (err: unknown) {
+      if (err && typeof err === 'object') {
+        const obj = err as Record<string, unknown>;
+        if (obj.code === 11000 || obj['name'] === 'MongoServerError') {
+          throw new ConflictException('Usuário já cadastrado');
+        }
+      }
+      throw err as Error;
+    }
+  }
+
+  async getUserById(id: string): Promise<User | null> {
+    if (!id) {
+      throw new BadRequestException('Id é obrigatório');
+    }
+    return this.userRepository.findById(id);
   }
 }

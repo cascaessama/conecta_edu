@@ -33,4 +33,31 @@ export class UserRepository {
       .limit(safeLimit)
       .exec();
   }
+
+  async searchUsers(query: string): Promise<User[]> {
+    const regex = { $regex: query, $options: 'i' };
+    // Busca por username e userType; nunca retornar hash da senha
+    return this.userModel
+      .find(
+        { $or: [{ username: regex }, { userType: regex }] },
+        { password: 0 },
+      )
+      .exec();
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.userModel.deleteOne({ _id: userId }).exec();
+  }
+
+  async updateUser(
+    userId: string,
+    update: Partial<User>,
+  ): Promise<void> {
+    await this.userModel.updateOne({ _id: userId }, { $set: update }).exec();
+  }
+
+  async findById(userId: string): Promise<User | null> {
+    // Nunca retornar o hash da senha
+    return this.userModel.findById(userId, { password: 0 }).exec();
+  }
 }

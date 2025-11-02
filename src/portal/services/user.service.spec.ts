@@ -5,6 +5,8 @@ import { UserType } from '../schemas/models/user-type.enum';
 const mockUserRepository = () => ({
   findByUsername: jest.fn(),
   createUser: jest.fn(),
+  findAllPaginated: jest.fn(),
+  searchUsers: jest.fn(),
 });
 
 describe('UserService', () => {
@@ -52,6 +54,20 @@ describe('UserService', () => {
       ).resolves.toBeUndefined();
 
       expect(userRepository.createUser).toHaveBeenCalled();
+    });
+  });
+
+  describe('searchUsers', () => {
+    it('should delegate to repository and return results', async () => {
+      const expected = [
+        { id: '1', username: 'john', userType: UserType.Teacher },
+        { id: '2', username: 'maria', userType: UserType.Admin },
+      ];
+      userRepository.searchUsers.mockResolvedValue(expected);
+
+      const result = await service.searchUsers('jo');
+      expect(userRepository.searchUsers).toHaveBeenCalledWith('jo');
+      expect(result).toEqual(expected);
     });
   });
 });

@@ -1,7 +1,19 @@
-import { Controller, Post, Body, UseGuards, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Query,
+  BadRequestException,
+  Delete,
+  Param,
+  Put,
+} from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { RegisterUserDto } from '../dto/register-user.dto';
+import { UpdateUserDto } from 'src/portal/dto/update-user.dto';
 import { Roles } from 'src/shared/decorators/roles.decorator';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
@@ -46,5 +58,45 @@ export class UserController {
       return { message: 'Não há usuários cadastrados na base de dados' };
     }
     return users;
+  }
+
+  @Get('search')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Teacher, UserType.Admin)
+  async searchUsers(@Query('query') query: string) {
+    if (!query) throw new BadRequestException('Query param is required');
+    const result = await this.userService.searchUsers(query);
+    if (!result || result.length === 0) {
+      return {
+        message: `Busca nos campos 'Username' e 'UserType' não encontrou resultados com a palavra <${query}>`,
+      };
+    }
+    return result;
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Teacher, UserType.Admin)
+  async deleteUser(@Param('id') id: string) {
+    await this.userService.deleteUser(id);
+    return { message: 'Usuário excluído com sucesso!' };
+  }
+
+  @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Teacher, UserType.Admin)
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    await this.userService.updateUser(id, updateUserDto);
+    return { message: 'Usuário atualizado com sucesso!' };
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Teacher, UserType.Admin)
+  async getUserById(@Param('id') id: string) {
+    return this.userService.getUserById(id);
   }
 }
