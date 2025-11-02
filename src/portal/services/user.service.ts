@@ -71,7 +71,7 @@ export class UserService {
     }
 
     if (typeof dto.userType !== 'undefined') {
-      update.userType = dto.userType as UserType;
+      update.userType = dto.userType;
     }
 
     if (typeof dto.password !== 'undefined') {

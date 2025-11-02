@@ -18,7 +18,6 @@ import { z } from 'zod';
 import { ZodValidationPipe } from '../../shared/pipe/zod-validation.pipe';
 import { LoggingInterceptor } from '../../shared/interceptors/logging.interceptor';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../shared/guards/auth.guard';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { Roles } from '../../shared/decorators/roles.decorator';
 import { RolesGuard } from '../../shared/guards/roles.guard';
@@ -33,11 +32,15 @@ const createPostsSchema = z.object({
 type CreatedPosts = z.infer<typeof createPostsSchema>;
 
 ApiTags('portal');
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(LoggingInterceptor)
 @Controller('portal')
 export class PortalController {
   constructor(private readonly portalService: PortalService) {}
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllPosts(
     @Query('limit') limit: number,
@@ -50,6 +53,8 @@ export class PortalController {
     return posts;
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get('search')
   async searchPosts(@Query('query') query: string) {
     if (!query) throw new BadRequestException('Query param is required');
@@ -62,6 +67,8 @@ export class PortalController {
     return result;
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getPosts(@Param('id') id: string) {
     return this.portalService.getPosts(id);

@@ -49,10 +49,7 @@ export class UserRepository {
     await this.userModel.deleteOne({ _id: userId }).exec();
   }
 
-  async updateUser(
-    userId: string,
-    update: Partial<User>,
-  ): Promise<void> {
+  async updateUser(userId: string, update: Partial<User>): Promise<void> {
     await this.userModel.updateOne({ _id: userId }, { $set: update }).exec();
   }
 
