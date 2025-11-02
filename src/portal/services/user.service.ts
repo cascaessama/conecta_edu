@@ -6,6 +6,7 @@ import {
 import { UserRepository } from '../repositories/user.repository';
 import * as bcrypt from 'bcrypt';
 import { UserType } from '../schemas/models/user-type.enum';
+import { User } from '../schemas/user.schema';
 
 @Injectable()
 export class UserService {
@@ -43,5 +44,9 @@ export class UserService {
       }
       throw err as Error;
     }
+  }
+
+  async getAllUsers(limit: number, page: number): Promise<User[]> {
+    return this.userRepository.findAllPaginated(limit, page);
   }
 }

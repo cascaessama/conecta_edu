@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Query } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { RegisterUserDto } from '../dto/register-user.dto';
@@ -32,5 +32,19 @@ export class UserController {
   ): Promise<{ access_token: string }> {
     const user = await this.authService.validateUser(username, password);
     return this.authService.login(user);
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Teacher, UserType.Admin)
+  async getAllUsers(
+    @Query('limit') limit: number,
+    @Query('page') page: number,
+  ) {
+    const users = await this.userService.getAllUsers(limit, page);
+    if (!users || users.length === 0) {
+      return { message: 'Não há usuários cadastrados na base de dados' };
+    }
+    return users;
   }
 }

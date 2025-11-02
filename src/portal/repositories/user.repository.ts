@@ -20,4 +20,17 @@ export class UserRepository {
   async findByUsername(username: string): Promise<User | null> {
     return this.userModel.findOne({ username }).exec();
   }
+
+  async findAllPaginated(limit: number, page: number): Promise<User[]> {
+    const safeLimit = Number(limit) > 0 ? Number(limit) : 10;
+    const safePage = Number(page) > 0 ? Number(page) : 1;
+    const offset = (safePage - 1) * safeLimit;
+
+    // Nunca retornar o hash da senha
+    return this.userModel
+      .find({}, { password: 0 })
+      .skip(offset)
+      .limit(safeLimit)
+      .exec();
+  }
 }
