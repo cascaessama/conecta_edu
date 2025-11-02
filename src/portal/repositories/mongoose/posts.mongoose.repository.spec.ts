@@ -1,4 +1,3 @@
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { PostsMongooseRepository } from './posts.mongoose.repository';
@@ -57,7 +56,9 @@ describe('PostsMongooseRepository', () => {
 
   it('deve atualizar um post', async () => {
     modelMock.exec.mockResolvedValue(undefined);
-    await expect(repository.updatePosts('1', {} as any)).resolves.toBeUndefined();
+    await expect(
+      repository.updatePosts('1', {} as any),
+    ).resolves.toBeUndefined();
   });
 
   it('deve deletar um post', async () => {

@@ -20,6 +20,9 @@ import { LoggingInterceptor } from '../../shared/interceptors/logging.intercepto
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../../shared/guards/auth.guard';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { Roles } from '../../shared/decorators/roles.decorator';
+import { RolesGuard } from '../../shared/guards/roles.guard';
+import { UserType } from '../schemas/models/user-type.enum';
 
 const createPostsSchema = z.object({
   titulo: z.string(),
@@ -29,7 +32,7 @@ const createPostsSchema = z.object({
 });
 type CreatedPosts = z.infer<typeof createPostsSchema>;
 
-ApiTags('portal')
+ApiTags('portal');
 @UseInterceptors(LoggingInterceptor)
 @Controller('portal')
 export class PortalController {
@@ -52,7 +55,9 @@ export class PortalController {
     if (!query) throw new BadRequestException('Query param is required');
     const result = await this.portalService.searchPosts(query);
     if (!result || result.length === 0) {
-      return { message: `Busca nos campos 'Título' e 'Conteúdo' não encontrou resultados com a palavra <${query}>` };
+      return {
+        message: `Busca nos campos 'Título' e 'Conteúdo' não encontrou resultados com a palavra <${query}>`,
+      };
     }
     return result;
   }
@@ -63,29 +68,35 @@ export class PortalController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Admin, UserType.Teacher)
   @UsePipes(new ZodValidationPipe(createPostsSchema))
   @Post()
-  async createPosts(@Body() { titulo, conteudo, dataCriacao, autor }: CreatedPosts) {
-    await this.portalService.createPosts({ titulo, conteudo, dataCriacao, autor });
+  async createPosts(
+    @Body() { titulo, conteudo, dataCriacao, autor }: CreatedPosts,
+  ) {
+    await this.portalService.createPosts({
+      titulo,
+      conteudo,
+      dataCriacao,
+      autor,
+    });
     return { message: 'Post criado com sucesso!' };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Admin, UserType.Teacher)
   @Put(':id')
-  async updatePosts(
-    @Param('id') id: string,
-    @Body() posts: IPosts,
-  ) {
+  async updatePosts(@Param('id') id: string, @Body() posts: IPosts) {
     await this.portalService.updatePosts(id, posts);
     return { message: 'Post atualizado com sucesso!' };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Admin, UserType.Teacher)
   @Delete(':id')
-    async deletePosts(@Param('id') id: string) {
-      await this.portalService.deletePosts(id);
-      return { message: 'Post excluído com sucesso!' };
-    } 
-
+  async deletePosts(@Param('id') id: string) {
+    await this.portalService.deletePosts(id);
+    return { message: 'Post excluído com sucesso!' };
+  }
 }

@@ -1,13 +1,11 @@
-import { IPosts} from 'src/portal/schemas/models/posts.interface';
+import { IPosts } from 'src/portal/schemas/models/posts.interface';
 import { PostsRepository } from '../posts.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Posts } from '../../schemas/posts.schema';
 import { Model } from 'mongoose';
 
 export class PostsMongooseRepository implements PostsRepository {
-  constructor(
-    @InjectModel(Posts.name) private postsModel: Model<Posts>,
-  ) {}
+  constructor(@InjectModel(Posts.name) private postsModel: Model<Posts>) {}
   getallPosts(limit: number, page: number): Promise<IPosts[]> {
     throw new Error('Method not implemented.');
   }
@@ -22,12 +20,14 @@ export class PostsMongooseRepository implements PostsRepository {
   }
 
   async searchPosts(query: string): Promise<IPosts[]> {
-    return this.postsModel.find({
-      $or: [
-        { titulo: { $regex: query, $options: 'i' } },
-        { conteudo: { $regex: query, $options: 'i' } }
-      ]
-    }).exec();
+    return this.postsModel
+      .find({
+        $or: [
+          { titulo: { $regex: query, $options: 'i' } },
+          { conteudo: { $regex: query, $options: 'i' } },
+        ],
+      })
+      .exec();
   }
 
   async createPosts(posts: IPosts): Promise<void> {
@@ -37,9 +37,7 @@ export class PostsMongooseRepository implements PostsRepository {
   }
 
   async updatePosts(postsId: string, posts: IPosts): Promise<void> {
-    await this.postsModel
-      .updateOne({ _id: postsId }, { $set: posts })
-      .exec();
+    await this.postsModel.updateOne({ _id: postsId }, { $set: posts }).exec();
   }
 
   async deletePosts(postsId: string): Promise<void> {

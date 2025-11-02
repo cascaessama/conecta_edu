@@ -18,7 +18,7 @@ import { AuthModule } from './portal/modules/auth.module';
     PortalModule,
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET || 'your_jwt_secret',
       signOptions: { expiresIn: '10m' },
     }),
     AuthModule, // Adicionando o AuthModule

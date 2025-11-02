@@ -8,21 +8,21 @@ import { Posts, PostsSchema } from './schemas/posts.schema';
 import { PrometheusService } from 'src/shared/services/prometheus.service';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            {
-                name: Posts.name,
-                schema: PostsSchema,
-            },
-        ]),
-    ],
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: Posts.name,
+        schema: PostsSchema,
+      },
+    ]),
+  ],
   providers: [
     {
       provide: PostsRepository,
       useClass: PostsMongooseRepository,
     },
     PortalService,
-    PrometheusService
+    PrometheusService,
   ],
   controllers: [PortalController],
 })

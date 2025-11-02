@@ -13,14 +13,23 @@ export class AuthService {
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.userRepository.findByUsername(username);
     if (user && (await bcrypt.compare(password, user.password))) {
-      const { password, ...result } = user;
+      // Ensure we return a plain object with enumerable properties
+      const plain =
+        typeof (user as any).toObject === 'function'
+          ? (user as any).toObject()
+          : (user as any);
+      const { password: _pw, ...result } = plain;
       return result;
     }
     throw new UnauthorizedException('Invalid credentials');
   }
 
   async login(user: any): Promise<{ access_token: string }> {
-    const payload = { username: user.username, sub: user._id };
+    const payload = {
+      username: user.username,
+      sub: user._id,
+      userType: user.userType,
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };

@@ -1,7 +1,11 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { RegisterUserDto } from '../dto/register-user.dto';
+import { Roles } from 'src/shared/decorators/roles.decorator';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { UserType } from '../schemas/models/user-type.enum';
 
 @Controller('users')
 export class UserController {
@@ -11,9 +15,13 @@ export class UserController {
   ) {}
 
   @Post('register')
-  async register(@Body() registerUserDto: RegisterUserDto): Promise<{ message: string }> {
-    const { username, password } = registerUserDto;
-    await this.userService.register(username, password);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserType.Teacher, UserType.Admin)
+  async register(
+    @Body() registerUserDto: RegisterUserDto,
+  ): Promise<{ message: string }> {
+    const { username, password, userType } = registerUserDto;
+    await this.userService.register(username, password, userType);
     return { message: 'User registered successfully' };
   }
 
